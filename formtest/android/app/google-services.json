@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "61354420731",
+    "firebase_url": "https://formtest-672d7.firebaseio.com",
+    "project_id": "formtest-672d7",
+    "storage_bucket": "formtest-672d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61354420731:android:33a82ee2cbffc147",
+        "android_client_info": {
+          "package_name": "com.example.formtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61354420731-a0sm6udov81jl12vtsb70opkojh6918q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD17e6TBLARzABciTkY34j7ASPBHNCUWNY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61354420731-a0sm6udov81jl12vtsb70opkojh6918q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
