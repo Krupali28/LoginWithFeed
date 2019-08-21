@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formtest/data.dart';
 import 'package:formtest/post_item.dart';
 
+
 class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
@@ -15,13 +16,12 @@ class _FeedState extends State<Feed> {
         title: Text("Feeds"),
         centerTitle: true,
       ),
-
-
-      body: ListView.builder(
+      body:
+          // Column(children: <Widget>[
+          ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 20),
         itemCount: posts.length,
         itemBuilder: (BuildContext context, int index) {
-
           Map post = posts[index];
           return PostItem(
             img: post['img'],
@@ -29,13 +29,8 @@ class _FeedState extends State<Feed> {
             dp: post['dp'],
             time: post['time'],
           );
+         
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
-        onPressed: (){},
       ),
     );
   }

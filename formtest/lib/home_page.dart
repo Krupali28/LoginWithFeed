@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:formtest/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:formtest/todo.dart';
 import 'dart:async';
 import 'package:formtest/feed.dart';
+import 'package:formtest/profile.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.onSignedOut})
@@ -277,11 +277,12 @@ class _HomePageState extends State<HomePage> {
                           icon: (completed)
                               ? Icon(
                                   Icons.done_outline,
-                                  color: Colors.green,
+                                  color: Color.fromRGBO(2, 55, 255, 1),
                                   size: 20.0,
                                 )
                               : Icon(Icons.done,
-                                  color: Colors.grey, size: 20.0),
+                                  color: Colors.pink,
+                                  size: 20.0),
                           onPressed: () {
                             _updateTodo(_todoList[index]);
                           }),
@@ -317,23 +318,32 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('Menu'),
+                child: Text('Menu',
+                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.pink,
                 ),
               ),
               ListTile(
                 title: Text('Events'),
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: Text('News Feeds'),
-                onTap: (){
-                 // Navigator.pop(context);
-                 Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new Feed()));
+                onTap: () {
+                  Navigator.push(context,
+                      new MaterialPageRoute(builder: (context) => new Feed()));
+                },
+              ),
+              ListTile(
+                title: Text('Profile'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => new Profile()));
                 },
               )
             ],

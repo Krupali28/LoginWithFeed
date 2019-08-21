@@ -35,19 +35,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     return false;
   }
 
-  // void _buildErrorDialog(_message, BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       // return object of type Dialog
-  //       return AlertDialog(
-  //         title: new Text("Error Message"),
-  //         content: new Text(_message),
-  //       );
-  //     },
-  //   );
-  // }
-
   // Perform login or signup
   void _validateAndSubmit() async {
     setState(() {
@@ -78,20 +65,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         } else {
           _errorMessage = "Please enter valid email Id.";
           _showErrorMessage();
-          // final snackBar = SnackBar(
-          //   content: Text('Please enter valid email Id.'),
-          //   action: SnackBarAction(
-          //     label: 'Undo',
-          //     onPressed: () {
-          //       // Some code to undo the change.
-          //     },
-          //   ),
-          // );
-
-          // // Find the Scaffold in the widget tree and use
-          // // it to show a SnackBar.
-          // Scaffold.of(context).showSnackBar(snackBar);
-
         }
       } catch (e) {
         print('Error: $e');
@@ -133,9 +106,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Flutter login demo'),
-        ),
         body: Stack(
           children: <Widget>[
             _showBody(),
@@ -222,7 +192,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 48.0,
-          // child: Image.asset('assets/flutter-icon.png'),
+           child: Image.asset('assets/logo.jpg'),
         ),
       ),
     );
@@ -239,7 +209,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             hintText: 'Email',
             icon: new Icon(
               Icons.mail,
-              color: Colors.grey,
+              color: Colors.pink,
             )),
         validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
         onSaved: (value) => _email = value.trim(),
@@ -258,7 +228,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             hintText: 'Password',
             icon: new Icon(
               Icons.lock,
-              color: Colors.grey,
+              color: Colors.pink,
             )),
         validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
         onSaved: (value) => _password = value.trim(),
@@ -279,7 +249,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           : _changeFormToLogin,
     );
   }
-
   Widget _showPrimaryButton() {
     return new Padding(
         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
@@ -289,7 +258,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             elevation: 5.0,
             shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue,
+            color: Colors.pink,
             child: _formMode == FormMode.LOGIN
                 ? new Text('Login',
                     style: new TextStyle(fontSize: 20.0, color: Colors.white))
