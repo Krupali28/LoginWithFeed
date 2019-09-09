@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formtest/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:formtest/todo.dart';
+import 'package:formtest/event.dart';
 import 'dart:async';
 import 'package:formtest/feed.dart';
 import 'package:formtest/profile.dart';
@@ -19,16 +19,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Todo> _todoList = new List();
-  List<Todo> _fulltodoList = new List();
+  List<EventData> _eventList = new List();
+  List<EventData> _fullEventList = new List();
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final _textEditingController = TextEditingController();
-  StreamSubscription<Event> _onTodoAddedSubscription;
-  StreamSubscription<Event> _onTodoChangedSubscription;
+  StreamSubscription<Event> _onEventAddedSubscription;
+  StreamSubscription<Event> _onEventChangedSubscription;
 
-  Query _todoQuery;
+  Query _eventQuery;
 
   bool _isEmailVerified = false;
 
@@ -38,15 +38,15 @@ class _HomePageState extends State<HomePage> {
 
     _checkEmailVerification();
 
-    _todoList = new List();
-    _todoQuery = _database
+    _eventList = new List();
+    _eventQuery = _database
         .reference()
-        .child("todo")
+        .child("event")
         .orderByChild("userId")
         .equalTo(widget.userId);
-    _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(_onEntryAdded);
-    _onTodoChangedSubscription =
-        _todoQuery.onChildChanged.listen(_onEntryChanged);
+    _onEventAddedSubscription = _eventQuery.onChildAdded.listen(_onEntryAdded);
+    _onEventChangedSubscription =
+        _eventQuery.onChildChanged.listen(_onEntryChanged);
   }
 
   void _checkEmailVerification() async {
@@ -113,32 +113,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _onTodoAddedSubscription.cancel();
-    _onTodoChangedSubscription.cancel();
+    _onEventAddedSubscription.cancel();
+    _onEventChangedSubscription.cancel();
     super.dispose();
   }
 
   _onEntryChanged(Event event) {
-    var oldEntry = _todoList.singleWhere((entry) {
+    var oldEntry = _eventList.singleWhere((entry) {
       return entry.key == event.snapshot.key;
     });
 
     setState(() {
-      _todoList[_todoList.indexOf(oldEntry)] =
-          Todo.fromSnapshot(event.snapshot);
+      _eventList[_eventList.indexOf(oldEntry)] =
+          EventData.fromSnapshot(event.snapshot);
     });
   }
 
   _onEntryAdded(Event event) {
-    _fulltodoList.add(Todo.fromSnapshot(event.snapshot));
-    // _database.reference().once().then((DataSnapshot snapshot) {
-    //   _fulltodoList.add(Todo.fromSnapshot(snapshot));
-    //   print('Data : ${snapshot.value}');
-    //   print(_fulltodoList.length);
-    // });
+    _fullEventList.add(EventData.fromSnapshot(event.snapshot));
 
     setState(() {
-      _todoList.add(Todo.fromSnapshot(event.snapshot));
+      _eventList.add(EventData.fromSnapshot(event.snapshot));
+      print(_eventList);
     });
   }
 
@@ -151,50 +147,51 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _addNewTodo(String todoItem) {
-    if (todoItem.length > 0) {
-      Todo todo = new Todo(todoItem.toString(), widget.userId, false);
-      _database.reference().child("todo").push().set(todo.toJson());
+  _addNewEvent(String eventItem) {
+    if (eventItem.length > 0) {
+      EventData event =
+          new EventData(eventItem.toString(), widget.userId, false);
+      _database.reference().child("event").push().set(event.toJson());
     }
   }
 
-  _updateTodo(Todo todo) {
+  _updateEvent(EventData event) {
     //Toggle completed
-    todo.completed = !todo.completed;
-    if (todo != null) {
-      _database.reference().child("todo").child(todo.key).set(todo.toJson());
+    event.completed = !event.completed;
+    if (event != null) {
+      _database.reference().child("event").child(event.key).set(event.toJson());
     }
   }
 
-  _deleteTodo(String todoId, int index) {
-    _database.reference().child("todo").child(todoId).remove().then((_) {
-      print("Delete $todoId successful");
+  _deleteEvent(String eventId, int index) {
+    _database.reference().child("event").child(eventId).remove().then((_) {
+      print("Delete $eventId successful");
       setState(() {
-        _todoList.removeAt(index);
+        _eventList.removeAt(index);
       });
     });
   }
 
   TextEditingController editingController = TextEditingController();
   void filterSearchResults(String query) {
-    List<Todo> dummySearchList = List<Todo>();
-    dummySearchList = _fulltodoList;
+    List<EventData> dummySearchList = List<EventData>();
+    dummySearchList = _fullEventList;
     if (query.isNotEmpty) {
-      List<Todo> dummyListData = List<Todo>();
+      List<EventData> dummyListData = List<EventData>();
       dummySearchList.forEach((item) {
         if (item.subject.contains(query)) {
           dummyListData.add(item);
         }
       });
       setState(() {
-        _todoList.clear();
-        _todoList.addAll(dummyListData);
+        _eventList.clear();
+        _eventList.addAll(dummyListData);
       });
       return;
     } else {
       setState(() {
-        _todoList.clear();
-        _todoList.addAll(dummySearchList);
+        _eventList.clear();
+        _eventList.addAll(dummySearchList);
       });
     }
   }
@@ -212,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                   controller: _textEditingController,
                   autofocus: true,
                   decoration: new InputDecoration(
-                    labelText: 'Add new todo',
+                    labelText: 'Add new Event',
                   ),
                 ))
               ],
@@ -226,7 +223,7 @@ class _HomePageState extends State<HomePage> {
               new FlatButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    _addNewTodo(_textEditingController.text.toString());
+                    _addNewEvent(_textEditingController.text.toString());
                     Navigator.pop(context);
                   })
             ],
@@ -234,8 +231,9 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _showTodoList() {
-    if (_todoList.length > 0) {
+  Widget _showEventList() {
+    print(_eventList);
+    if (_eventList.length > 0) {
       return Container(
           child: Column(children: <Widget>[
         Padding(
@@ -256,47 +254,108 @@ class _HomePageState extends State<HomePage> {
         Expanded(
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: _todoList.length,
+                itemCount: _eventList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  String todoId = _todoList[index].key;
-                  String subject = _todoList[index].subject;
-                  bool completed = _todoList[index].completed;
-                  String userId = _todoList[index].userId;
+                  String eventId = _eventList[index].key;
+                  String subject = _eventList[index].subject;
+                  bool completed = _eventList[index].completed;
+                  String userId = _eventList[index].userId;
                   return Dismissible(
-                    key: Key(todoId),
+                    key: Key(eventId),
                     background: Container(color: Colors.red),
                     onDismissed: (direction) async {
-                      _deleteTodo(todoId, index);
+                      _deleteEvent(eventId, index);
                     },
-                    child: ListTile(
-                      title: Text(
-                        subject,
-                        style: TextStyle(fontSize: 20.0),
+                    child: new Container(
+                      margin: const EdgeInsets.all(10),
+                      child: FittedBox(
+                        child: Material(
+                          color: Colors.grey.shade100,
+                          elevation: 10.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                width: 150,
+                                height: 150,
+                                margin: const EdgeInsets.only(left: 10.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.asset(
+                                    "assets/cm0.jpeg",
+                                    fit: BoxFit.fill,
+                                    alignment: Alignment.topLeft,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                  width: 220,
+                                  height: 180,
+                                  alignment: Alignment.topCenter,
+                                  padding:
+                                      new EdgeInsets.fromLTRB(20, 20, 10, 100),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      new Text(
+                                        subject,
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                    ],
+                                  )),
+                              Container(
+                                width: 150,
+                                height: 150,
+                                child: IconButton(
+                                    icon: (completed)
+                                        ? Icon(
+                                            Icons.done_outline,
+                                            color:
+                                                Color.fromRGBO(2, 55, 255, 1),
+                                            size: 40.0,
+                                          )
+                                        : Icon(Icons.done,
+                                            color: Colors.pink, size: 40.0),
+                                    onPressed: () {
+                                      _updateEvent(_eventList[index]);
+                                    }),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      trailing: IconButton(
-                          icon: (completed)
-                              ? Icon(
-                                  Icons.done_outline,
-                                  color: Color.fromRGBO(2, 55, 255, 1),
-                                  size: 20.0,
-                                )
-                              : Icon(Icons.done,
-                                  color: Colors.pink,
-                                  size: 20.0),
-                          onPressed: () {
-                            _updateTodo(_todoList[index]);
-                          }),
                     ),
                   );
                 }))
       ]));
     } else {
       return Center(
-          child: Text(
+          child:  Column(children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onChanged: (value) {
+              filterSearchResults(value);
+            },
+            controller: editingController,
+            decoration: InputDecoration(
+                labelText: "Search",
+                hintText: "Search",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+          ),
+        ),
+        Text(
         "Welcome. Your list is empty",
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30.0),
-      ));
+      )
+          ])
+      );
     }
   }
 
@@ -312,7 +371,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: _signOut)
           ],
         ),
-        body: _showTodoList(),
+        body: _showEventList(),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -343,7 +402,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (context) => new Profile()));
+                          builder: (context) => new Profile(widget.userId)));
                 },
               )
             ],

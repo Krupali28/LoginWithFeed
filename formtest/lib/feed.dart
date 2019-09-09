@@ -32,6 +32,12 @@ class _FeedState extends State<Feed> {
          
         },
       ),
-    );
+    floatingActionButton: FloatingActionButton(
+          onPressed: () {
+          
+          },
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ));
   }
 }

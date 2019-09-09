@@ -19,6 +19,7 @@ class PostItem extends StatefulWidget {
 }
 
 class _PostItemState extends State<PostItem> {
+  bool isLiked = false;
   @override
   Widget build(BuildContext context) {
     double _volume = 0.0;
@@ -63,11 +64,14 @@ class _PostItemState extends State<PostItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.favorite_border),
+                        icon: Icon(
+                            isLiked ? Icons.favorite : Icons.favorite_border),
                         iconSize: 36.0,
                         color: Color.fromRGBO(2, 55, 255, 1),
                         onPressed: () {
-                          
+                          setState(() {
+                            isLiked = !isLiked;
+                          });
                         },
                       ),
                       SizedBox(width: 16.0),
