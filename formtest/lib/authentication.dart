@@ -67,16 +67,16 @@ class Auth implements BaseAuth {
 
   _addNewUser(String email,String userId) {
     if (email.length > 0) {
-      User objUser = new User( userId,'test', email,0,null);
-      _database.reference().child("user").push().set(objUser.toJson());
+     // User objUser = new User( email,userId,null,'test', 'test',null,null,null);
+     // _database.reference().child("user").push().set(objUser.toJson());
     }
   }
 
-  _updateUser(User user) {
-    //Toggle completed
-    user.postCount = user.postCount++;
-    if (user != null) {
-      _database.reference().child("user").child(user.userId).set(user.toJson());
-    }
-  }
+  // _updateUser(User user) {
+  //   //Toggle completed
+  //   user.followers = user.followers++;
+  //   if (user != null) {
+  //     _database.reference().child("user").child(user.id).set(user.toJson());
+  //   }
+  // }
 }

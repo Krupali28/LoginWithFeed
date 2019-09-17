@@ -5,6 +5,7 @@ import 'package:formtest/event.dart';
 import 'dart:async';
 import 'package:formtest/feed.dart';
 import 'package:formtest/profile.dart';
+import 'package:formtest/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.onSignedOut})
@@ -402,7 +403,9 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (context) => new Profile(widget.userId)));
+                          builder: (context) =>  ProfilePage(userId: widget.userId,),
+                          )
+                          );
                 },
               )
             ],

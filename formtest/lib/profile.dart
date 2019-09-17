@@ -74,12 +74,12 @@ class _ProfileState extends State<Profile> {
         .once()
         .then((snapshot) {
       
-      user.userId = snapshot.value["userId"];
-      user.name = snapshot.value["name"];
-      user.email = snapshot.value["email"];
-      user.postCount = snapshot.value["postCount"];
-      user.profileImg = snapshot.value["profileImg"];
-      print(user);
+      // user.id = snapshot.value["userId"];
+      // user.username = snapshot.value["name"];
+      // user.email = snapshot.value["email"];
+      // user.followers = snapshot.value["postCount"];
+      // user.following = snapshot.value["profileImg"];
+      // print(user);
     });
 
     //User.fromSnapshot(queryUser.once());
